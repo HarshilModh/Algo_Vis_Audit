@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -192,6 +191,16 @@ console.log("Sorted array:", sorted);`
                 disabled={isRunning}
               >
                 Quick Sort
+              </Button>
+              <Button 
+                onClick={() => loadExample(`// Custom Example
+function customExample() {
+  console.log("This is a custom example");
+}`)} 
+                variant="outline"
+                disabled={isRunning}
+              >
+                Custom Example
               </Button>
             </div>
           </CardContent>

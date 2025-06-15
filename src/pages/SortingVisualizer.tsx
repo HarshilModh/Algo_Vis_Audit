@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
-import { Play, Pause, RotateCcw, Shuffle, Plus } from "lucide-react";
+import { Play, Pause, RotateCcw, Shuffle, Plus, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import StepExplainer from "@/components/ai/StepExplainer";
 import ComplexityExplainer from "@/components/ai/ComplexityExplainer";
@@ -525,199 +525,158 @@ const SortingVisualizer = () => {
   };
 
   return (
-    <div className="p-6 bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
-      <div className="max-w-6xl mx-auto">
-        <div className="mb-6">
-          <Link to="/" className="text-blue-600 hover:text-blue-800 underline font-medium">← Back to Home</Link>
-          <div className="flex items-center justify-between mt-2">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="mb-8">
+          <Link to="/" className="inline-flex items-center text-slate-600 hover:text-blue-700 mb-4 font-medium transition-colors">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Home
+          </Link>
+          <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-800">Sorting Algorithm Visualizer</h1>
-              <p className="text-gray-600 mt-1">Watch how different sorting algorithms work step by step</p>
+              <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Sorting Visualizer</h1>
+              <p className="text-slate-600 mt-1">Step-by-step visualization of sorting algorithms</p>
             </div>
-            <div className="flex gap-2">
+            <div>
               <ApiKeySettings apiKey={apiKey} onApiKeyChange={handleApiKeyChange} />
             </div>
           </div>
         </div>
 
         {/* Controls Section */}
-        <div className="bg-white rounded-lg shadow-md border p-6 mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                <label className="block text-sm font-semibold text-gray-700">Algorithm:</label>
-                <ComplexityExplainer 
-                  algorithm={algorithm}
-                  algorithmInfo={algorithms[algorithm as keyof typeof algorithms]}
-                  apiKey={apiKey}
-                />
+        <div className="mb-8">
+          <div className="rounded-2xl shadow-lg bg-white/90 border-0 p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-slate-700">Algorithm</label>
+                <Select value={algorithm} onValueChange={setAlgorithm}>
+                  <SelectTrigger className="rounded-lg border-slate-200 focus:ring-2 focus:ring-blue-400">
+                    <SelectValue placeholder="Select algorithm" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="bubble">Bubble Sort</SelectItem>
+                    <SelectItem value="merge">Merge Sort</SelectItem>
+                    <SelectItem value="quick">Quick Sort</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
-              <Select value={algorithm} onValueChange={setAlgorithm} disabled={isPlaying}>
-                <SelectTrigger className="border-2">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.entries(algorithms).map(([key, algo]) => (
-                    <SelectItem key={key} value={key}>
-                      {algo.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <div className="mt-2 p-2 bg-gray-50 rounded text-sm">
-                <p className="text-gray-700">{algorithms[algorithm as keyof typeof algorithms]?.description}</p>
-                <p className="text-gray-600 font-mono text-xs mt-1">
-                  Time: {algorithms[algorithm as keyof typeof algorithms]?.timeComplexity}
-                </p>
+
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-slate-700">Array Size</label>
+                <div className="flex items-center space-x-2">
+                  <Slider
+                    value={[arraySize]}
+                    onValueChange={setArraySize}
+                    min={5}
+                    max={100}
+                    step={1}
+                    className="flex-1"
+                  />
+                  <Input
+                    type="number"
+                    value={arraySize}
+                    onChange={(e) => setArraySize([parseInt(e.target.value)])}
+                    className="w-20 rounded-lg border-slate-200 focus:ring-2 focus:ring-blue-400"
+                    min={5}
+                    max={100}
+                  />
+                </div>
               </div>
-            </div>
 
-            <div>
-              <label className="block text-sm font-semibold mb-2 text-gray-700">
-                Array Size: <span className="font-mono text-blue-600">{arraySize[0]}</span>
-              </label>
-              <Slider
-                value={arraySize}
-                onValueChange={setArraySize}
-                min={5}
-                max={50}
-                step={5}
-                disabled={isPlaying}
-                className="mt-2"
-              />
-            </div>
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-slate-700">Speed</label>
+                <div className="flex items-center space-x-2">
+                  <Slider
+                    value={[speed]}
+                    onValueChange={setSpeed}
+                    min={1}
+                    max={100}
+                    step={1}
+                    className="flex-1"
+                  />
+                  <Input
+                    type="number"
+                    value={speed}
+                    onChange={(e) => setSpeed([parseInt(e.target.value)])}
+                    className="w-20 rounded-lg border-slate-200 focus:ring-2 focus:ring-blue-400"
+                    min={1}
+                    max={100}
+                  />
+                </div>
+              </div>
 
-            <div>
-              <label className="block text-sm font-semibold mb-2 text-gray-700">
-                Speed: <span className="font-mono text-blue-600">{speed[0]}%</span>
-              </label>
-              <Slider
-                value={speed}
-                onValueChange={setSpeed}
-                min={1}
-                max={100}
-                step={1}
-                className="mt-2"
-              />
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-slate-700">Actions</label>
+                <div className="flex space-x-2">
+                  <Button
+                    onClick={startSorting}
+                    disabled={isPlaying}
+                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow transition-colors duration-200"
+                  >
+                    <Play className="h-4 w-4 mr-2" />
+                    Start
+                  </Button>
+                  <Button
+                    onClick={pauseSorting}
+                    disabled={!isPlaying}
+                    className="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-lg shadow transition-colors duration-200"
+                  >
+                    <Pause className="h-4 w-4 mr-2" />
+                    Pause
+                  </Button>
+                  <Button
+                    onClick={resetArray}
+                    className="flex-1 bg-slate-500 hover:bg-slate-700 text-white font-semibold rounded-lg shadow transition-colors duration-200"
+                  >
+                    <RotateCcw className="h-4 w-4 mr-2" />
+                    Reset
+                  </Button>
+                  <Button
+                    onClick={generateArray}
+                    className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow transition-colors duration-200"
+                  >
+                    <Shuffle className="h-4 w-4 mr-2" />
+                    Shuffle
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
+        </div>
 
-          <div className="flex gap-3 mb-4 flex-wrap">
-            {!isPlaying ? (
-              <Button onClick={startSorting} className="bg-green-600 hover:bg-green-700 text-white font-medium">
-                <Play size={18} className="mr-2" />
-                {isPaused ? 'Resume' : 'Start Sorting'}
-              </Button>
-            ) : (
-              <Button onClick={pauseSorting} className="bg-yellow-600 hover:bg-yellow-700 text-white font-medium">
-                <Pause size={18} className="mr-2" />
-                Pause
-              </Button>
-            )}
-            <Button onClick={resetArray} className="bg-gray-600 hover:bg-gray-700 text-white font-medium" disabled={isPlaying}>
-              <RotateCcw size={18} className="mr-2" />
-              Reset
-            </Button>
-            <Button onClick={generateArray} className="bg-blue-600 hover:bg-blue-700 text-white font-medium" disabled={isPlaying}>
-              <Shuffle size={18} className="mr-2" />
-              Shuffle
-            </Button>
+        {/* Visualization Section */}
+        <div className="mb-8">
+          <div className="rounded-2xl shadow-lg bg-white/90 border-0 p-6">
+            <div className="h-[400px] flex items-end justify-center space-x-1 bg-slate-50 rounded-xl p-4 border border-slate-100">
+              {array.map((element, index) => (
+                <div
+                  key={index}
+                  className={`w-full ${getBarColor(element.color)} rounded-t transition-colors duration-200 shadow-sm`}
+                  style={{ height: `${element.value}%` }}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* AI Explanation Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="rounded-2xl shadow-lg bg-white/90 border-0 p-6">
+            <h2 className="text-xl font-bold text-slate-900 mb-4">Step Explanation</h2>
             <StepExplainer
-              algorithm={algorithms[algorithm as keyof typeof algorithms]?.name}
-              currentState={{ array: array.map(el => el.value), step: currentStep }}
-              stepDescription={currentOperation}
-              disabled={isPlaying}
+              algorithm={algorithm}
+              currentStep={currentStep}
+              array={array}
               apiKey={apiKey}
             />
           </div>
 
-          <div className="flex gap-3 items-center">
-            <label className="text-sm font-semibold text-gray-700">Custom values:</label>
-            <Input
-              placeholder="Enter numbers: 64, 34, 25, 12, 22, 11, 90"
-              value={customValues}
-              onChange={(e) => setCustomValues(e.target.value)}
-              disabled={isPlaying}
-              className="flex-1 border-2"
+          <div className="rounded-2xl shadow-lg bg-white/90 border-0 p-6">
+            <h2 className="text-xl font-bold text-slate-900 mb-4">Complexity Analysis</h2>
+            <ComplexityExplainer
+              algorithm={algorithm}
+              apiKey={apiKey}
             />
-            <Button
-              onClick={generateFromCustomValues}
-              disabled={isPlaying || !customValues.trim()}
-              className="bg-purple-600 hover:bg-purple-700 text-white"
-            >
-              <Plus size={18} />
-            </Button>
-          </div>
-        </div>
-
-        {/* Stats Section */}
-        <div className="bg-white rounded-lg shadow-md border p-4 mb-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-            <div className="bg-blue-50 p-3 rounded-lg">
-              <div className="text-2xl font-bold text-blue-600">{comparisons}</div>
-              <div className="text-sm text-gray-600">Comparisons</div>
-            </div>
-            <div className="bg-red-50 p-3 rounded-lg">
-              <div className="text-2xl font-bold text-red-600">{swaps}</div>
-              <div className="text-sm text-gray-600">Swaps/Moves</div>
-            </div>
-            <div className="bg-green-50 p-3 rounded-lg">
-              <div className="text-2xl font-bold text-green-600">{currentStep}</div>
-              <div className="text-sm text-gray-600">Current Step</div>
-            </div>
-            <div className="bg-purple-50 p-3 rounded-lg">
-              <div className="text-2xl font-bold text-purple-600">{totalSteps}</div>
-              <div className="text-sm text-gray-600">Total Steps</div>
-            </div>
-          </div>
-          {currentOperation && (
-            <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <div className="text-sm font-medium text-yellow-800">Current Operation:</div>
-              <div className="text-yellow-700">{currentOperation}</div>
-            </div>
-          )}
-        </div>
-
-        {/* Visualization Section */}
-        <div className="bg-white rounded-lg shadow-md border p-6 mb-6">
-          <h3 className="text-lg font-semibold mb-4 text-gray-800">Array Visualization</h3>
-          <div className="flex items-end justify-center bg-gray-50 p-4 rounded-lg" style={{ height: '320px' }}>
-            {array.map((element, index) => (
-              <div
-                key={index}
-                className={`${getBarColor(element.color)} mx-0.5 border-2 relative flex items-end justify-center transition-all duration-300 rounded-t-sm`}
-                style={{
-                  height: `${getBarHeight(element.value)}px`,
-                  width: `${Math.max(400 / array.length, 8)}px`,
-                }}
-                title={`Value: ${element.value}, Index: ${index}`}
-              >
-                <span 
-                  className="text-xs font-bold text-white absolute bottom-1 transform drop-shadow-sm"
-                  style={{ 
-                    writingMode: array.length > 25 ? 'vertical-rl' : 'horizontal-tb',
-                    textOrientation: array.length > 25 ? 'mixed' : 'initial'
-                  }}
-                >
-                  {element.value}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Legend Section */}
-        <div className="bg-white rounded-lg shadow-md border p-6">
-          <h3 className="text-lg font-semibold mb-4 text-gray-800">
-            Color Legend for {algorithms[algorithm as keyof typeof algorithms]?.name}
-          </h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-            {getAlgorithmLegend().map((item, index) => (
-              <div key={index} className="flex items-center gap-2">
-                <div className={`w-5 h-5 ${item.color} border-2 rounded`}></div>
-                <span className="text-sm text-gray-700">{item.label}</span>
-              </div>
-            ))}
           </div>
         </div>
       </div>

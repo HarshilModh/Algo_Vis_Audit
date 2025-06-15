@@ -1,7 +1,7 @@
-
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ExternalLink } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const AICodeAudit = () => {
   return (
@@ -23,6 +23,12 @@ const AICodeAudit = () => {
               <ExternalLink size={20} />
               AI Code Audit Tool
             </CardTitle>
+            <Button
+              onClick={() => window.open("https://ai-code-audit.vercel.app/", "_blank")}
+              className="ml-auto bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg shadow transition-colors duration-200"
+            >
+              Open in New Tab
+            </Button>
           </CardHeader>
           <CardContent className="p-0">
             <iframe
