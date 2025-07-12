@@ -646,15 +646,50 @@ const SortingVisualizer = () => {
 
         {/* Visualization Section */}
         <div className="mb-8">
-          <div className="rounded-2xl shadow-lg bg-white/90 border-0 p-6">
-            <div className="h-[400px] flex items-end justify-center space-x-1 bg-slate-50 rounded-xl p-4 border border-slate-100">
-              {array.map((element, index) => (
-                <div
-                  key={index}
-                  className={`w-full ${getBarColor(element.color)} rounded-t transition-colors duration-200 shadow-sm`}
-                  style={{ height: `${element.value}%` }}
-                />
-              ))}
+          <div className="rounded-2xl shadow-lg bg-gradient-to-b from-slate-100 to-slate-200 border-0 p-6">
+            <div className="h-[400px] flex items-end justify-center bg-white rounded-xl p-4 border border-slate-200 shadow-lg overflow-x-auto pt-8">
+              {array.map((element, index) => {
+                const isTall = element.value > 80;
+                return (
+                  <div
+                    key={index}
+                    className={`${getBarColor(element.color)} rounded-t transition-all duration-300 shadow-md flex items-end justify-center relative`}
+                    style={{
+                      height: `${element.value}%`,
+                      width: `calc(100% / ${array.length} - 4px)` ,
+                      minWidth: '16px',
+                      marginLeft: '2px',
+                      marginRight: '2px',
+                      transition: 'height 0.3s, background 0.3s'
+                    }}
+                  >
+                    {isTall ? (
+                      <span className="text-xs font-semibold text-white w-full text-center select-none" style={{lineHeight: '1.2'}}>{element.value}</span>
+                    ) : (
+                      <span className="absolute -top-6 text-xs font-semibold text-slate-700 select-none w-full text-center">{element.value}</span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            {/* Legend */}
+            <div className="flex justify-center mt-4 space-x-4">
+              <div className="flex items-center space-x-2">
+                <span className="w-4 h-4 bg-gray-300 border border-gray-400 rounded"></span>
+                <span className="text-xs text-slate-600">Unsorted</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <span className="w-4 h-4 bg-yellow-400 border border-yellow-600 rounded"></span>
+                <span className="text-xs text-slate-600">Comparing</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <span className="w-4 h-4 bg-red-500 border-red-700 rounded"></span>
+                <span className="text-xs text-slate-600">Swapping</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <span className="w-4 h-4 bg-green-500 border-green-700 rounded"></span>
+                <span className="text-xs text-slate-600">Sorted</span>
+              </div>
             </div>
           </div>
         </div>
@@ -675,6 +710,7 @@ const SortingVisualizer = () => {
             <h2 className="text-xl font-bold text-slate-900 mb-4">Complexity Analysis</h2>
             <ComplexityExplainer
               algorithm={algorithm}
+              algorithmInfo={algorithms[algorithm as keyof typeof algorithms]}
               apiKey={apiKey}
             />
           </div>

@@ -22,6 +22,15 @@ const ComplexityExplainer = ({ algorithm, algorithmInfo, apiKey }: ComplexityExp
   const [error, setError] = useState<string>('');
   const [open, setOpen] = useState(false);
 
+  // Safety check for algorithmInfo
+  if (!algorithmInfo) {
+    return (
+      <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+        <p className="text-yellow-700 text-sm">Algorithm information not available.</p>
+      </div>
+    );
+  }
+
   const handleExplain = async () => {
     if (!apiKey) {
       setError('Please enter your OpenAI API key in the settings.');
